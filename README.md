@@ -178,7 +178,7 @@ Turning sustainability into an engaging experience:
 
 ```bash
 # Clone the repository
-git clone <YOUR_GIT_URL>
+git clone https://github.com/ramprasadsharma881/Green_Commute
 
 # Navigate to project directory
 cd eco-commute-collective
