@@ -1,0 +1,19 @@
+SETUP YOUR OWN API KEYS
+================================
+
+Create a file named .env in the root directory and paste this:
+
+# Get your free Google Maps API key at: https://console.cloud.google.com/
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+VITE_APP_NAME=GreenCommute
+VITE_APP_URL=http://localhost:8080
+
+IMPORTANT: After creating .env file, RESTART your dev server!
+
+Steps:
+1. Get your API key from Google Cloud Console
+2. Create .env file with your key
+3. Stop the server (Ctrl+C)
+4. Run: npm run dev
+
+The interactive map will now work on ride details pages!

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seed Database - Eco Commute</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .log {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 14px;
+      font-family: monospace;
+      display: none;
+    }
+
+    .log-entry {
+      padding: 5px 0;
+      border-bottom: 1px solid #dee2e6;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🌱 Seed Test Rides</h1>
+    <p class="subtitle">Add sample rides to your Firebase database for testing</p>
+
+    <button id="seedBtn" onclick="seedDatabase()">Add Test Rides</button>
+
+    <div id="status"></div>
+    <div id="log" class="log"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // TODO: Add your own Firebase config here
+    // Get it from: https://console.firebase.google.com/
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "your-project.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project.appspot.com",
+      messagingSenderId: "your-sender-id",
+      appId: "your-app-id",
+      measurementId: "your-measurement-id"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const sampleRides = [
+      {
+        driverId: 'sample-driver-1',
+        driverName: 'Rajesh Kumar',
+        source: 'Rajanu, Karnataka, India',
+        destination: 'Yelahanka, Bengaluru, Karnataka, India',
+        dateTime: Timestamp.fromDate(new Date(Date.now() + 2 * 60 * 60 * 1000)),
+        availableSeats: 3,
+        pricePerSeat: 150,
+        vehicleModel: 'Honda City',
+        vehicleColor: 'Silver',
+        vehicleNumber: 'KA-01-AB-1234',
+        distance: 25,
+        co2Saved: 3.6,
+        status: 'active',
+        driverRating: 4.8,
+      },
+      {
+        driverId: 'sample-driver-2',
+        driverName: 'Priya Sharma',
+        source: 'Rajaji Nagar, Bengaluru, Karnataka, India',
+        destination: 'Yelahanka New Town, Bengaluru, Karnataka, India',
+        dateTime: Timestamp.fromDate(new Date(Date.now() + 4 * 60 * 60 * 1000)),
+        availableSeats: 2,
+        pricePerSeat: 120,
+        vehicleModel: 'Maruti Swift',
+        vehicleColor: 'Blue',
+        vehicleNumber: 'KA-03-CD-5678',
+        distance: 18,
+        co2Saved: 2.5,
+        status: 'active',
+        driverRating: 4.9,
+      },
+      {
+        driverId: 'sample-driver-3',
+        driverName: 'Amit Patel',
+        source: 'Rajaji Nagar, Bengaluru, Karnataka, India',
+        destination: 'Yelahanka, Bengaluru, Karnataka, India',
+        dateTime: Timestamp.fromDate(new Date(Date.now() + 6 * 60 * 60 * 1000)),
+        availableSeats: 4,
+        pricePerSeat: 100,
+        vehicleModel: 'Toyota Innova',
+        vehicleColor: 'White',
+        vehicleNumber: 'KA-05-EF-9012',
+        distance: 22,
+        co2Saved: 4.2,
+        status: 'active',
+        driverRating: 4.7,
+      },
+      {
+        driverId: 'sample-driver-4',
+        driverName: 'Sneha Reddy',
+        source: 'Koramangala, Bengaluru, Karnataka, India',
+        destination: 'Yelahanka, Bengaluru, Karnataka, India',
+        dateTime: Timestamp.fromDate(new Date(Date.now() + 3 * 60 * 60 * 1000)),
+        availableSeats: 2,
+        pricePerSeat: 180,
+        vehicleModel: 'Hyundai i20',
+        vehicleColor: 'Red',
+        vehicleNumber: 'KA-02-GH-3456',
+        distance: 28,
+        co2Saved: 3.8,
+        status: 'active',
+        driverRating: 5.0,
+      },
+      {
+        driverId: 'sample-driver-5',
+        driverName: 'Vikram Singh',
+        source: 'Rajanu, Karnataka, India',
+        destination: 'Bangalore International Airport, Yelahanka, Karnataka, India',
+        dateTime: Timestamp.fromDate(new Date(Date.now() + 5 * 60 * 60 * 1000)),
+        availableSeats: 3,
+        pricePerSeat: 200,
+        vehicleModel: 'Mahindra XUV500',
+        vehicleColor: 'Black',
+        vehicleNumber: 'KA-04-IJ-7890',
+        distance: 30,
+        co2Saved: 4.5,
+        status: 'active',
+        driverRating: 4.6,
+      },
+    ];
+
+    function addLog(message, type = 'info') {
+      const logDiv = document.getElementById('log');
+      logDiv.style.display = 'block';
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.textContent = message;
+      logDiv.appendChild(entry);
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    function showStatus(message, type) {
+      const statusDiv = document.getElementById('status');
+      statusDiv.textContent = message;
+      statusDiv.className = type;
+      statusDiv.style.display = 'block';
+    }
+
+    window.seedDatabase = async function () {
+      const btn = document.getElementById('seedBtn');
+      const statusDiv = document.getElementById('status');
+      const logDiv = document.getElementById('log');
+
+      btn.disabled = true;
+      btn.textContent = 'Adding rides...';
+      statusDiv.style.display = 'none';
+      logDiv.innerHTML = '';
+      logDiv.style.display = 'block';
+
+      try {
+        addLog('🌱 Starting to seed rides...', 'info');
+
+        const ridesCollection = collection(db, 'rides');
+        let successCount = 0;
+
+        for (const ride of sampleRides) {
+          try {
+            const docRef = await addDoc(ridesCollection, {
+              ...ride,
+              createdAt: Timestamp.now(),
+            });
+            addLog(`✅ Created ride: ${ride.driverName} - ${ride.source} to ${ride.destination}`);
+            successCount++;
+          } catch (error) {
+            addLog(`❌ Failed to create ride for ${ride.driverName}: ${error.message}`);
+            console.error(error);
+          }
+        }
+
+        showStatus(
+          `🎉 Successfully added ${successCount} out of ${sampleRides.length} rides!`,
+          'success'
+        );
+        addLog(`\n✨ Done! You can now search and book rides in the app.`);
+        btn.textContent = 'Rides Added Successfully!';
+      } catch (error) {
+        showStatus('❌ Error: ' + error.message, 'error');
+        addLog(`❌ Error: ${error.message}`);
+        console.error('Error seeding rides:', error);
+        btn.disabled = false;
+        btn.textContent = 'Try Again';
+      }
+    };
+  </script>
+</body>
+
+</html>
